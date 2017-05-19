@@ -4,8 +4,10 @@ import (
   "gopkg.in/kataras/iris.v6"
   "gopkg.in/kataras/iris.v6/adaptors/httprouter"
   "gopkg.in/kataras/iris.v6/adaptors/view"
+  "fmt"
   "github.com/culqi/culqi-go"
   "github.com/culqi/culqi-go/charge"
+
 )
 
 func main() {
@@ -25,30 +27,38 @@ func main() {
     ctx.Render("index.html", iris.Map{"gzip": true})
   })
 
-  app.Post("/", func(ctx *iris.Context) {
-      // 1. Configuración
-      config := &culqi.Config{
-      MerchantCode:   "pk_test_Rp2uV5dXI3quFq2X",  // Llave publica
-      ApiKey:         "sk_test_8GC9UJfifciOurwW", // Llave privada
-      }
-      // 2. Crea un nuevo cliente
-      client := culqi.New(config)
+  app.Post("/cargo", func(ctx *iris.Context) {
+    fmt.Print("hola cargo")
 
-      // 3. Parametros de creación de cargo
-      params := &charge.ChargeParams{
-      TokenId: token,
+    token := ctx.PostValue("token")
+		fmt.Printf("\nResponse Status Code: %v", token)
+
+
+    // 1. Configuración
+    config := &culqi.Config{
+      MerchantCode:   "pk_test_Rp2uV5dXI3quFq2X",  // Código de tu Comercio
+      ApiKey:   "sk_test_8GC9UJfifciOurwW", // API Key
+      //ApiVersion: "v2",   // No es un parametro necesario, por defecto es la v2
+    }
+
+    // 2. Crea un nuevo cliente
+    client := culqi.New(config)
+    // 3. Parametros de creación de cargo
+    params := &charge.ChargeParams{
+      TokenId: token ,
+      Email: "liz@mail.com",
       CurrencyCode: "PEN",
       Amount: 100,
-      Email: "liz@ruelas.com",
-      }
+    }
 
-      // 4. Crear Cargo
-      resp, err := charge.Create(params, client)
+    // 4. Crear Cargo
+    resp, err := charge.Create(params, client)
 
-      if err != nil {
-      panic(err.Error())
-      }
+    if err != nil {
+        fmt.Printf(err.Error())
+    }
 
+    fmt.Printf("\nResponse Status Code: %v", resp.StatusCode())
   })
 
 
