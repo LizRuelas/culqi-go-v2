@@ -7,6 +7,7 @@ import (
   "fmt"
   "github.com/culqi/culqi-go"
   "github.com/culqi/culqi-go/charge"
+  "encoding/json"
 
 )
 
@@ -28,7 +29,7 @@ func main() {
   })
 
   app.Post("/cargo", func(ctx *iris.Context) {
-    fmt.Print("hola cargo")
+      fmt.Print("hola cargo")
 
     token := ctx.PostValue("token")
 		fmt.Printf("\nResponse Status Code: %v", token)
@@ -57,8 +58,39 @@ func main() {
     if err != nil {
         fmt.Printf(err.Error())
     }
-
+    fmt.Printf("\nResponse Body: %v", resp)
     fmt.Printf("\nResponse Status Code: %v", resp.StatusCode())
+
+    // 5. convertir response en variable de go
+
+    type Outcome struct {
+      UserMessage string `json:"user_message"`
+      Code string `json:"code"`
+      MerchantMessage string  `json:"merchant_message"`
+    }
+
+		type TokenResponse struct {
+			// Object: "token"
+			Object string `json:"object"`
+			Id string `json:"id"`
+			Email string `json:"email"`
+      Outcome Outcome `json:"outcome"`
+		}
+
+
+
+		var jsontype TokenResponse
+
+		json.Unmarshal([]byte(resp.Body()), &jsontype)
+		//
+
+		fmt.Printf("\nResponse Body Object: %v", jsontype.Object)
+    fmt.Printf("\nResponse Body Object: %v", jsontype)
+
+		//6. response json
+
+		ctx.JSON(200,jsontype)
+
   })
 
 

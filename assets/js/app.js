@@ -26,6 +26,15 @@
                  datatype: 'json',
                  success: function(data) {
                    var result = "";
+                   console.log(data);
+
+                   if(data.constructor == String){
+                            result = JSON.parse(data);
+                  }
+                  if(data.constructor == Object){
+                      result = JSON.parse(JSON.stringify(data));
+                  }
+
                    if(result.object === 'charge'){
                     resultdiv(result.outcome.user_message);
                    }
