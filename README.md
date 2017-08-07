@@ -37,7 +37,8 @@ El código fuente de `culqi-go` está distribuido bajo MIT License, revisar el a
 
 ## Autor
 
-Liz Ruelas ([@LizRuelas](https://github.com/LizRuelas) - Team Culqi)  
+Liz Ruelas - Brayan Cruces - Team Culqi
+
 
 
 
